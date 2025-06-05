@@ -17,7 +17,7 @@ if 'Date' in df.columns:
     df = df.dropna(subset=['Date'])  # Drop rows with invalid dates
     df.set_index('Date', inplace=True)
 
-st.title("🌍 Air Quality Dashboard with Forecasting")
+st.title("🌍 Air Quality Dashboard with AA Forecasting")
 
 
 # --- Select numeric column to analyze ---
