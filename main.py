@@ -9,6 +9,13 @@ import datetime
 
 st.title("🌍 Air Quality Dashboard with 📈 Forecasting")
 
+# Add a short description for context
+st.markdown(
+    """
+    This app allows you to upload your air quality data in CSV format to easily explore historical trends and patterns in key pollutants through interactive charts and summary statistics. By leveraging a simple Linear Regression model, it forecasts future values based on past measurements, helping you anticipate upcoming air quality conditions. The app also provides tools to filter data by date range and download the forecast results, making it a practical and user-friendly solution for environmental analysis and planning.
+    """
+)
+
 # --- Upload CSV File ---
 uploaded_file = st.file_uploader("📁 Upload your air quality CSV file", type="csv")
 
@@ -23,6 +30,9 @@ if uploaded_file is not None:
         df = df.dropna(subset=['Date'])  # Drop rows with invalid dates
         df.set_index('Date', inplace=True)
 
+        # Show data range info to user
+        st.info(f"Data date range: {df.index.min().date()} to {df.index.max().date()}")
+
     # --- Select numeric column to analyze ---
     numeric_cols = df.select_dtypes(include='number').columns.tolist()
     if not numeric_cols:
@@ -36,6 +46,10 @@ if uploaded_file is not None:
         date_range = st.date_input("📅 Select date range", [df.index.min(), df.index.max()])
         if isinstance(date_range, list) and len(date_range) == 2:
             df = df.loc[date_range[0]:date_range[1]]
+
+    # Show data summary stats for selected variable
+    st.subheader(f"📈 Historical Data: Summary Statistics for {selected_col}")
+    st.write(df[selected_col].describe().to_frame())
 
     # --- Plot selected column ---
     st.subheader("📈 Historical Data")
@@ -73,8 +87,13 @@ if uploaded_file is not None:
 
     st.line_chart(combined_df)
 
+    # Show forecast summary stats
+    st.subheader("📊 Forecast Summary Statistics")
+    st.write(forecast_df.describe())
+
     # Download button
     csv = forecast_df.to_csv().encode('utf-8')
     st.download_button("⬇️ Download Forecast CSV", csv, f"{selected_col}_forecast.csv", "text/csv")
+
 else:
     st.warning("Please upload a CSV file to continue.")
