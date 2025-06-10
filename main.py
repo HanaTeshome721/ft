@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression
 import numpy as np
 import datetime
 
-st.title("🌍 Air Quality Dashboard with 📈 Forecasting")
+st.title("🌍 Air Quality with 📈 Forecasting")
 
 # Add a short description for context
 st.markdown(
